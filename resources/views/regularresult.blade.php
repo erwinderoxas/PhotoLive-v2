@@ -5,12 +5,13 @@
 	if (strpos($_SESSION['picture'], 'gif') !== false){
         $image = $_SESSION['picture'];
     }else{
-        // $repImg = str_replace("@","",$_SESSION['picture']);
-        // $rep1Img = str_replace(".jpg",".png",$repImg);
-        // $list = explode(".png", $repImg);
-        // $image = 'merge/'.$list[0].".png";   
-        // $_SESSION['picture'] = $image; 
     }
+    $con = "connected";
+    if(!$sock = @fsockopen('www.google.com', 80)){
+		$con = 'not connected';
+	}else{
+		$con = 'connected';
+	}
  ?>
 <!DOCTYPE html>
 <html>
@@ -23,6 +24,8 @@
 	<link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/Bootstrap.min.css">
 	<link rel="stylesheet" href="css/stylesss.css">
+	<script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
 	<script type="text/javascript" src="js/html2canvas.js"></script>
 	<script src = "js/jquery-3.1.1.min.js"></script>
 	<style type="text/css">
@@ -147,6 +150,7 @@
 	});
 
 	$(".twitter").hover(function(){
+		document.getElementById("status").placeholder = "Insert Caption"
 	    if(hover){$(this).attr("src", "images/htwitter.png");}
 	    }, function(){
 	    if(hover){$(this).attr("src", "images/twitter.png");}
@@ -203,31 +207,36 @@
 	$(".instagram").attr("src","images/hinstagram.png");
 	$("#status").hide(1000);
 	}
-
-	function share(){
-		var status = document.getElementById("status").value;
-	    if((status == "" && select == 1)||(status == "" && select == 3)){
-	    	alert("Textfield must be filled up.");
-	    }else{
-	    	if(select == 1){
-				//e-mail
-				var str = '<?php echo $pic ?>';
-				var pic = str.replace("@", "");
-				window.location.href = "email/"+status+"/regular/"+pic;
+		function share(){
+			var con = "<?php echo $con?>";
+			if(con == "connected"){
+				var status = document.getElementById("status").value;
+			    if((status == "" && select == 1)||(status == "" && select == 3)){
+			    	swal("Oops...", "Textfield must be filled up!", "error");
+			    }else{
+			    	if(select == 1){
+						//e-mail
+						var str = '<?php echo $pic ?>';
+						var res = str.split("@");
+						window.location.href = "email/"+status+"/regular/"+res[1];
+					}
+					if(select == 2){
+					    //facebook
+					}
+					if(select == 3){
+					   //twitter
+					   window.location.href = "twitter-share/"+status;
+					}
+					if(select == 4){
+					   //instagram
+					}
+			    }
+			}else{
+				swal("Oops...", "Internet connection problem!", "error");
 			}
-			if(select == 2){
-			    //facebook
-			}
-			if(select == 3){
-			   //twitter
-			   window.location.href = "twitter-share/"+status;
-			}
-			if(select == 4){
-			   //instagram
-			}
-	    }
+		}
 	
-	}
+	
 		var phpVar = "<?php echo $pic?>";
 		var split_pic = phpVar.split("@");
 		var background = document.getElementById("background");

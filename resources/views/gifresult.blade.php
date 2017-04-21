@@ -9,6 +9,12 @@
         $image = 'merge/'.$list[0].".png";   
         $_SESSION['picture'] = $image; 
     }
+    $con = "connected";
+    if(!$sock = @fsockopen('www.google.com', 80)){
+		$con = 'not connected';
+	}else{
+		$con = 'connected';
+	}
  ?>
 <!DOCTYPE html>
 <html>
@@ -18,6 +24,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sweetalert.css">
     <link href="css/stylesss.css" rel="stylesheet">
     <script src = "js/jquery-3.1.1.min.js"></script>    
 	<script src = "js/photolive.js"></script>
@@ -157,6 +165,7 @@
 	});
 
 	$(".twitter").hover(function(){
+		document.getElementById("status").placeholder = "Insert caption"
 	    if(hover){$(this).attr("src", "images/htwitter.png");}
 	    }, function(){
 	    if(hover){$(this).attr("src", "images/twitter.png");}
@@ -213,31 +222,36 @@
 	$(".instagram").attr("src","images/hinstagram.png");
 	$("#status").hide(1000);
 	}
-
 	function share(){
-	    var status = document.getElementById("status").value;
-	    if((status == "" && select == 1)||(status == "" && select == 3)){
-	    	alert("Textfield must be filled up.");
-	    }else{
-	    	if(select == 1){
-	    		//email
-	    		var pic1 = localStorage.getItem("pic1");
-				var gif = pic1.replace('.png','.gif');
-				window.location.href = "email/"+status+"/gif/"+gif;
+			var con = "<?php echo $con?>";
+			if(con == "connected"){
+				var status = document.getElementById("status").value;
+			    if((status == "" && select == 1)||(status == "" && select == 3)){
+			    	swal("Oops...", "Textfield must be filled up!", "error");
+			    }else{
+			    	if(select == 1){
+			    		//email
+			    		var pic1 = localStorage.getItem("pic1");
+						var gif = pic1.replace('.png','.gif');
+						window.location.href = "email/"+status+"/gif/"+gif;
+					}
+					if(select == 2){
+					    //facebook
+					}
+					if(select == 3){
+					   //twitter
+					   window.location.href = "twitter-share/"+status;
+					}
+					if(select == 4){
+					   //instagram
+					}
+			    }
+			}else{
+				swal("Oops...", "Internet connection problem!", "error");
 			}
-			if(select == 2){
-			    //facebook
-			}
-			if(select == 3){
-			   //twitter
-			   window.location.href = "twitter-share/"+status;
-			}
-			if(select == 4){
-			   //instagram
-			}
-	    }
-	}
-
+		}
+	
+	
 </script>
 
 </body>

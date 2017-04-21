@@ -10,7 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('welcome', function () {
+    return view('welcome');
+});
 Route::get('/', function () {
     return view('index');
 });
@@ -39,9 +41,13 @@ Route::get('share', function () {
 Route::get('end/{type}/{img}', function ($type,$image) {
     return view('end', compact('type','image'));
 });
-Route::get('email/{status}/{type}/{image}', function ($status,$type,$image) {
 
+Route::get('email/{status}/{type}/{image}', function ($status,$type,$image) {
     return view('email', compact('status','type','image'));
+});
+
+Route::get('email/{email}/{type}/{end}/{image}', function ($email,$type,$end,$image) {
+    return view('end', compact('email','type','end','image'));
 });
 
 //email

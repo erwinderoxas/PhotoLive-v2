@@ -36,8 +36,11 @@ if(!$mail->send()) {
     echo 'Message could not be sent.';
     echo 'Mailer Error: ' . $mail->ErrorInfo;
 } else {
-	$validation = 1;
-	echo "sent";
+	if($type == "regular"){
+		echo "<script>window.location.href = 'end/$image';</script>";
+	}else{
+		echo "<script>window.location.href = 'end/$image';</script>";
+	}
 }
 
 ?>
